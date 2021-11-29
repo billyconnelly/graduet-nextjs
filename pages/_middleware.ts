@@ -1,14 +1,24 @@
-import type { NextFetchEvent, NextRequest } from "next/server";
-import { getProviders } from "next-auth/react";
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
-export function middleware(req: NextRequest, ev: NextFetchEvent) {
-  //   const fetchProviders = async () => {
-  //     const providers = await getProviders();
-  //     console.log("Providers", providers);
-  //   };
+export async function middleware(req) {
+  const session = await getToken({ req, secret: process.env.SECRET });
+  console.log("SESSION HERE: ", session.email);
 
-  //   Object.values(fetchProviders()).map((provider) => console.log(provider.name));
-  //
+  // app.
+  //   res.json(posts);get("/feed", async (req, res) => {
+  //   const posts = await prisma.user.findMany({
+  //     where: { published: true },
+  //     include: { author: true },
+  //   });
+  //   res.json(posts);
+  // });
+  // You could also check for any property on the session object,
 
-  console.log("_MIDDLEWARE_");
+  // like rolec === “admin” or name === "John Doe", etc.
+
+  // if (!session) return NextResponse.redirect("/api/auth/signin");
+
+  // If user is authenticated, continue.
+  return NextResponse.next();
 }

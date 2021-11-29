@@ -3,6 +3,7 @@ import LinkedInProvider from "next-auth/providers/linkedin";
 import Email, { EmailProvider } from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+import useSWR from "swr";
 
 const prisma = new PrismaClient();
 
@@ -36,11 +37,28 @@ export default NextAuth({
     logo: "https://i.ibb.co/SKCWB9Y/graduet.png",
   },
   callbacks: {
-    async session({ session, user }) {
-      // Send properties to the client, like an access_token from a provider.
-      session.user["is_graduate"] = user.isGraduate;
-      console.log("SESSION: ", session, " USER: ", user);
+    async jwt({ token, user }) {
+      if (typeof user !== "undefined") {
+        token["isGraduate"] = user.isGraduate;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      console.log("TOKEN: ", token);
+      // session.user["is_graduate"] = token.isGraduate;
+      // const fetcher = (...args) => fetch(...args).then((res) => res.json());
+      // const { data, error } = useSWR("/api/is-graduate", fetcher);
+      // // if (user.isGraduate === undefined) console.log("UNDEFINED AF");
+      // // console.log("HERE IT IS: ", user.isGraduate);
+      // // Send properties to the client, like an access_token from a provider.
+      // // user.isGraduate !== "undefined" &&
+      // //   (session.user["is_graduate"] = user.isGraduate);
+      // // console.log("SESSION: ", session, " USER: ", user);
+      // console.log("SESSION FROM SESSION: ", session);
       return session;
     },
+  },
+  session: {
+    jwt: true,
   },
 });

@@ -17,7 +17,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <Navbar />
         <Box
-          margin="60px auto"
+          border="10px solid white"
+          margin="10px auto"
           padding="20px"
           maxWidth="lg"
           sx={{ backgroundColor: "lightgray", borderRadius: "20px" }}
